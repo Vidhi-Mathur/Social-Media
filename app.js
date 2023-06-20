@@ -64,6 +64,9 @@ app.use((req, res, next) => {
 
 //Run on every request that reaches the graphql endpoint, but it won't deny the request if token is absent. It will just set 'isAuth' to false
 app.use(auth)
+//Serving images statically
+app.use(express.static(path.join('public', 'images')));
+
 
 //To upload image(/ data) through graphql, it works only on json data. What we'll implement is to set an endpoint where we can send image and then let that endpoint store the image and return the path to the image and then send another request with that path to the image and other data to your graphql endpoint
 app.put('/post-image', (req, res, next) => {
@@ -99,9 +102,6 @@ app.use('/graphql', graphqlHTTP({
     }
 }))
 
-//Serving images statically
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
 app.use((error, req, res, next) => {
     console.log(error)
     const status = error.status || 500
@@ -117,5 +117,6 @@ mongoose.connect(MONGODB_URI)
 })
 .catch(err => {
     console.log(err)
+    
 })
 
